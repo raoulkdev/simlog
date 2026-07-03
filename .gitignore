@@ -2,3 +2,5 @@
 /http_tests
 
 .env
+
+.DS_Store
