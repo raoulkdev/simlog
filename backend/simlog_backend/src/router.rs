@@ -6,6 +6,7 @@ use axum::{
 };
 use sqlx::{Pool, Postgres};
 
+// Router
 pub fn router(db: Arc<Pool<Postgres>>) -> Router {
     Router::new()
         .route("/flights", post("Post a new flight"))
