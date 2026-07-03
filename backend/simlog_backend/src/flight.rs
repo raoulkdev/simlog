@@ -19,7 +19,7 @@ pub struct Flight {
     pub arrival_airport: String,
 
     // Flight time
-    pub duration_minutes: i16,
+    pub duration_minutes: i32,
 
     // Weather info
     pub weather_conditions: String,
@@ -27,16 +27,16 @@ pub struct Flight {
     pub wind_conditions: String,
 
     // Takeoff and landing info
-    pub takeoff_type: String,
-    pub approach_type: String,
+    pub takeoff_type: Option<String>,
+    pub approach_type: Option<String>,
     pub landing_quality_rating: i16,
 
     // ATC info
     pub atc_used: bool,
 
     // Failures and remarks info
-    pub failures_emergencies: String,
-    pub remarks: String,
+    pub failures_emergencies: Option<String>,
+    pub remarks: Option<String>,
 
     // Timestamps
     pub created_at: DateTime<Utc>,
@@ -55,7 +55,7 @@ pub struct FlightPayload {
     pub arrival_airport: String,
 
     // Flight time
-    pub duration_minutes: i16,
+    pub duration_minutes: i32,
 
     // Weather info
     pub weather_conditions: String,
@@ -64,13 +64,13 @@ pub struct FlightPayload {
 
     // Takeoff and landing info
     pub takeoff_type: Option<String>,
-    pub approach_type: String,
+    pub approach_type: Option<String>,
     pub landing_quality_rating: i16,
 
     // ATC info
     pub atc_used: bool,
 
     // Failures and remarks info
-    pub failures_emergencies: String,
-    pub remarks: String,
+    pub failures_emergencies: Option<String>,
+    pub remarks: Option<String>,
 }
