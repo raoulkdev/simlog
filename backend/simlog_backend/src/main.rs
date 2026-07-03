@@ -2,6 +2,7 @@ use crate::server::Server;
 
 mod router;
 mod server;
+mod flight;
 
 #[tokio::main]
 async fn main() {
