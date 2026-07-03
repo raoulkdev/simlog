@@ -7,70 +7,70 @@ use uuid::Uuid;
 #[derive(Deserialize, Serialize, sqlx::FromRow, Decode, Encode)]
 pub struct Flight {
     // ID
-    id: Uuid,
+    pub id: Uuid,
 
     // Base flight info
-    flight_date: NaiveDate,
-    aircraft: String,
-    simulator: String,
+    pub flight_date: NaiveDate,
+    pub aircraft: String,
+    pub simulator: String,
 
     // Airport info
-    departure_airport: String,
-    arrival_airport: String,
+    pub departure_airport: String,
+    pub arrival_airport: String,
 
     // Flight time
-    duration_minutes: i16,
+    pub duration_minutes: i16,
 
     // Weather info
-    weather_conditions: String,
-    time_of_day: String,
-    wind_conditions: String,
+    pub weather_conditions: String,
+    pub time_of_day: String,
+    pub wind_conditions: String,
 
     // Takeoff and landing info
-    takeoff_type: String,
-    approach_type: String,
-    landing_quality_rating: i8,
+    pub takeoff_type: String,
+    pub approach_type: String,
+    pub landing_quality_rating: i16,
 
     // ATC info
-    atc_used: bool,
+    pub atc_used: bool,
 
     // Failures and remarks info
-    failures_emergencies: String,
-    remarks: String,
+    pub failures_emergencies: String,
+    pub remarks: String,
 
     // Timestamps
-    created_at: DateTime<Utc>
+    pub created_at: DateTime<Utc>,
 }
 
 // Flight payload struct
 #[derive(Deserialize, Serialize, sqlx::FromRow, Decode, Encode)]
 pub struct FlightPayload {
     // Base flight info
-    flight_date: NaiveDate,
-    aircraft: String,
-    simulator: String,
+    pub flight_date: NaiveDate,
+    pub aircraft: String,
+    pub simulator: String,
 
     // Airport info
-    departure_airport: String,
-    arrival_airport: String,
+    pub departure_airport: String,
+    pub arrival_airport: String,
 
     // Flight time
-    duration_minutes: i16,
+    pub duration_minutes: i16,
 
     // Weather info
-    weather_conditions: String,
-    time_of_day: String,
-    wind_conditions: String,
+    pub weather_conditions: String,
+    pub time_of_day: String,
+    pub wind_conditions: String,
 
     // Takeoff and landing info
-    takeoff_type: String,
-    approach_type: String,
-    landing_quality_rating: i8,
+    pub takeoff_type: Option<String>,
+    pub approach_type: String,
+    pub landing_quality_rating: i16,
 
     // ATC info
-    atc_used: bool,
+    pub atc_used: bool,
 
     // Failures and remarks info
-    failures_emergencies: String,
-    remarks: String
+    pub failures_emergencies: String,
+    pub remarks: String,
 }

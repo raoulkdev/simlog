@@ -1,8 +1,9 @@
 use crate::server::Server;
 
+mod flight;
+mod handlers;
 mod router;
 mod server;
-mod flight;
 
 #[tokio::main]
 async fn main() {
