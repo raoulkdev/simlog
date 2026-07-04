@@ -1,6 +1,12 @@
-/backend/simlog_backend/target
-/http_tests
+target
+http_tests
 
 .env
 
 .DS_Store
+
+.venv/
+__pycache__/
+*.pyc
+.env
+dist/
