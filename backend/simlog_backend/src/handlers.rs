@@ -1,8 +1,10 @@
 use std::sync::Arc;
 
+use axum::extract::Path;
 use axum::http::StatusCode;
 use axum::{Json, extract::State, response::IntoResponse};
 use sqlx::{Pool, Postgres};
+use uuid::Uuid;
 
 use crate::flight::{Flight, FlightPayload};
 
@@ -55,5 +57,26 @@ pub async fn create_flight(
     {
         Ok(added_flight) => (StatusCode::OK, Json(added_flight)).into_response(),
         Err(e) => (StatusCode::OK, Json(format!("Error adding flight: {e}"))).into_response(),
+    }
+}
+
+pub async fn get_all_flights(State(db): State<Arc<Pool<Postgres>>>) -> impl IntoResponse {
+    match sqlx::query_as::<_, Flight>("SELECT * FROM flights")
+        .fetch_all(&*db)
+        .await
+    {
+        Ok(all_flights) => (StatusCode::OK, Json(all_flights)).into_response(),
+        Err(e) => (StatusCode::OK, Json(format!("Error getting all flights: {e}"))).into_response(),
+    }
+}
+
+pub async fn get_flight_by_id(State(db): State<Arc<Pool<Postgres>>>, Path(id): Path<Uuid>) -> impl IntoResponse {
+    match sqlx::query_as::<_, Flight>("SELECT * FROM flights WHERE id = $1")
+        .bind(&id)
+        .fetch_one(&*db)
+        .await
+    {
+        Ok(flight) => (StatusCode::OK, Json(flight)).into_response(),
+        Err(e) => (StatusCode::OK, Json(format!("Error getting flight with id:{id}, Error: {e}"))).into_response(),
     }
 }
