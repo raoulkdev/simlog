@@ -8,6 +8,7 @@ use uuid::Uuid;
 
 use crate::flight::{Flight, FlightPayload};
 
+// Add a new flight to database
 pub async fn create_flight(
     State(db): State<Arc<Pool<Postgres>>>,
     Json(payload): Json<FlightPayload>,
@@ -60,6 +61,7 @@ pub async fn create_flight(
     }
 }
 
+// Get all flights in the database
 pub async fn get_all_flights(State(db): State<Arc<Pool<Postgres>>>) -> impl IntoResponse {
     match sqlx::query_as::<_, Flight>("SELECT * FROM flights")
         .fetch_all(&*db)
@@ -70,6 +72,7 @@ pub async fn get_all_flights(State(db): State<Arc<Pool<Postgres>>>) -> impl Into
     }
 }
 
+// Get an individual flight in the database by UUID
 pub async fn get_flight_by_id(State(db): State<Arc<Pool<Postgres>>>, Path(id): Path<Uuid>) -> impl IntoResponse {
     match sqlx::query_as::<_, Flight>("SELECT * FROM flights WHERE id = $1")
         .bind(&id)
