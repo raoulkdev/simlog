@@ -103,15 +103,11 @@ pub async fn get_flight_by_id(
 pub async fn handle_user_flight_ai_query(
     Json(payload): Json<FlightQueryPayload>,
 ) -> impl IntoResponse {
-    let ai_service_host =
-        std::env::var("AI_SERVICE_HOST").expect(".env error: no value set for AI_SERVICE_HOST");
-    let ai_service_port =
-        std::env::var("AI_SERVICE_PORT").expect(".env error: no value set for AI_SERVICE_PORT");
+    let ai_service_url =
+        std::env::var("AI_SERVICE_URL").expect(".env error: no value set for AI_SERVICE_URL");
 
     match reqwest::Client::new()
-        .post(format!(
-            "http://{ai_service_host}:{ai_service_port}/query_ai"
-        ))
+        .post(format!("{ai_service_url}/query_ai"))
         .json(&payload)
         .send()
         .await

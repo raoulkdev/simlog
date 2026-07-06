@@ -6,7 +6,7 @@ import requests
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY" or ""))
-backend_address = os.getenv("BACKEND_ADDRESS", "localhost:8000")
+backend_address = os.getenv("BACKEND_ADDRESS", "simlog_backend:3000")
 
 def query_ai(flight_query_payload: FlightQueryPayload):
     flight_data = requests.get(f"http://{backend_address}/flights/{flight_query_payload.flight_id}")

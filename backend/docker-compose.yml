@@ -14,6 +14,16 @@ services:
       timeout: 5s
       retries: 5
 
+  simlog_ai_service:
+    build:
+      context: ./simlog_ai_service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    expose:
+      - "8001"
+
   simlog_backend:
     build:
       context: ./simlog_backend
@@ -22,6 +32,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      simlog_ai_service:
+        condition: service_started
     env_file:
       - ../.env
     command: >

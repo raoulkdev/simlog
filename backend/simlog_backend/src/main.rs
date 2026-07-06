@@ -12,7 +12,7 @@ async fn main() {
 
     // Load server and database addresses
     let server_address =
-        std::env::var("BACKEND_ADDRESS").expect(".env error: no value set for BACKEND_ADDRESS");
+        std::env::var("BACKEND_BIND_ADDRESS").expect(".env error: no value set for BACKEND_ADDRESS");
     let db_url = std::env::var("DATABASE_URL").expect(".env error: no value set for DATABASE_URL");
 
     // Attempt to create server
