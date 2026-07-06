@@ -1,7 +1,7 @@
 use crate::server::Server;
 
-mod flight;
 mod handlers;
+mod models;
 mod router;
 mod server;
 

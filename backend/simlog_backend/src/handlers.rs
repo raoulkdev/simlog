@@ -6,7 +6,7 @@ use axum::{Json, extract::State, response::IntoResponse};
 use sqlx::{Pool, Postgres};
 use uuid::Uuid;
 
-use crate::flight::{Flight, FlightPayload};
+use crate::models::{Flight, FlightPayload, FlightQueryPayload, FlightQueryResponse};
 
 // Add a new flight to database
 pub async fn create_flight(
@@ -57,7 +57,11 @@ pub async fn create_flight(
     .await
     {
         Ok(added_flight) => (StatusCode::OK, Json(added_flight)).into_response(),
-        Err(e) => (StatusCode::OK, Json(format!("Error adding flight: {e}"))).into_response(),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(format!("Error adding flight: {e}")),
+        )
+            .into_response(),
     }
 }
 
@@ -68,18 +72,62 @@ pub async fn get_all_flights(State(db): State<Arc<Pool<Postgres>>>) -> impl Into
         .await
     {
         Ok(all_flights) => (StatusCode::OK, Json(all_flights)).into_response(),
-        Err(e) => (StatusCode::OK, Json(format!("Error getting all flights: {e}"))).into_response(),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(format!("Error getting all flights: {e}")),
+        )
+            .into_response(),
     }
 }
 
 // Get an individual flight in the database by UUID
-pub async fn get_flight_by_id(State(db): State<Arc<Pool<Postgres>>>, Path(id): Path<Uuid>) -> impl IntoResponse {
+pub async fn get_flight_by_id(
+    State(db): State<Arc<Pool<Postgres>>>,
+    Path(id): Path<Uuid>,
+) -> impl IntoResponse {
     match sqlx::query_as::<_, Flight>("SELECT * FROM flights WHERE id = $1")
         .bind(&id)
         .fetch_one(&*db)
         .await
     {
         Ok(flight) => (StatusCode::OK, Json(flight)).into_response(),
-        Err(e) => (StatusCode::OK, Json(format!("Error getting flight with id:{id}, Error: {e}"))).into_response(),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(format!("Error getting flight with id:{id}, Error: {e}")),
+        )
+            .into_response(),
+    }
+}
+
+//  Handle user ai request
+pub async fn handle_user_flight_ai_query(
+    Json(payload): Json<FlightQueryPayload>,
+) -> impl IntoResponse {
+    let ai_service_host =
+        std::env::var("AI_SERVICE_HOST").expect(".env error: no value set for AI_SERVICE_HOST");
+    let ai_service_port =
+        std::env::var("AI_SERVICE_PORT").expect(".env error: no value set for AI_SERVICE_PORT");
+
+    match reqwest::Client::new()
+        .post(format!(
+            "http://{ai_service_host}:{ai_service_port}/query_ai"
+        ))
+        .json(&payload)
+        .send()
+        .await
+    {
+        Ok(response_raw) => match response_raw.json::<FlightQueryResponse>().await {
+            Ok(response) => (StatusCode::OK, Json(response)).into_response(),
+            Err(e) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(format!("Error getting ai response, Error: {e}")),
+            )
+                .into_response(),
+        },
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(format!("Error getting ai response, Error: {e}")),
+        )
+            .into_response(),
     }
 }

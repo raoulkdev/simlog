@@ -74,3 +74,16 @@ pub struct FlightPayload {
     pub failures_emergencies: Option<String>,
     pub remarks: Option<String>,
 }
+
+// User AI flight query payload model
+#[derive(Deserialize, Serialize, sqlx::FromRow, Decode, Encode)]
+pub struct FlightQueryPayload {
+    pub flight_id: Uuid,
+    pub user_query: String,
+}
+
+// User AI flight query response model
+#[derive(Deserialize, Serialize, sqlx::FromRow, Decode, Encode)]
+pub struct FlightQueryResponse {
+    pub query_response: String,
+}
