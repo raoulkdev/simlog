@@ -91,6 +91,11 @@ pub async fn get_flight_by_id(
         .await
     {
         Ok(flight) => (StatusCode::OK, Json(flight)).into_response(),
+        Err(sqlx::Error::RowNotFound) => (
+            StatusCode::NOT_FOUND,
+            Json(format!("No flight found with id:{id}")),
+        )
+            .into_response(),
         Err(e) => (
             StatusCode::INTERNAL_SERVER_ERROR,
             Json(format!("Error getting flight with id:{id}, Error: {e}")),
